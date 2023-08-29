@@ -1,0 +1,16 @@
+monolog:
+    handlers:
+        main:
+            type: fingers_crossed
+            action_level: info
+            #level: debug
+            handler: grouped
+        grouped:
+            type: group
+            members: [cloudwatch, local]
+        local:
+            type: stream
+            path: "%kernel.logs_dir%/%kernel.environment%.log"
+        cloudwatch:
+            type: service
+            id: cloudwatch_handler

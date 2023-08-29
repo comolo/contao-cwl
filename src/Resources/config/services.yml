@@ -1,0 +1,24 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    cloudwatch_client:
+        class: Aws\CloudWatchLogs\CloudWatchLogsClient
+        arguments:
+            -
+                credentials: { key: "%env(resolve:AWS_CLOUD_WATCH_KEY)%", secret: "%env(resolve:AWS_CLOUD_WATCH_SECRET)%" }
+                region: "%env(resolve:AWS_CLOUD_WATCH_REGION)%"
+                version: "%env(resolve:AWS_CLOUD_WATCH_VERSION)%"
+
+    cloudwatch_handler:
+        class: Maxbanton\Cwh\Handler\CloudWatch
+        arguments:
+            - "@cloudwatch_client"
+            - "%env(resolve:AWS_CLOUD_WATCH_GROUP)%"        # groupName
+            - "%env(resolve:AWS_CLOUD_WATCH_STREAM)%"       # streamName
+            - "%env(resolve:AWS_CLOUD_WATCH_RETENTION)%"    # retentionDays
+            - "%env(resolve:AWS_CLOUD_WATCH_BATCH)%"        # logsInBatch
+            - {}       # tags
+            - "%env(resolve:AWS_CLOUD_WATCH_LEVEL)%"        # logLevel: DEBUG, INFO, WARNING, ?
